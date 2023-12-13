@@ -18,16 +18,16 @@ namespace YoutubeAPI.Controllers
         }
         [EnableCors("MyAllowSpecificOrigins")]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int? numberOfVideos = null)
         {
             try
             {
-                var vids = await _repo.GetAllAsync();
+                var vids = await _repo.GetAllAsync(numberOfVideos);
                 return Ok(vids);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.ToString());
             }
         }
         [EnableCors("MyAllowSpecificOrigins")]
@@ -46,6 +46,49 @@ namespace YoutubeAPI.Controllers
             }
         }
         [EnableCors("MyAllowSpecificOrigins")]
+        [HttpGet("channel/{channel_id}", Name = "GetVideoByChannelId")]
+        public async Task<IActionResult> GetByChannelId(int channel_id)
+        {
+            try
+            {
+                var vids = await _repo.GetByChannelIdAsync(channel_id);
+                return Ok(vids);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+           
+        }
+        [EnableCors("MyAllowSpecificOrigins")]
+        [HttpGet("category")]
+        public async Task<IActionResult> GetByCategoryId(int category_id)
+        {
+            try
+            {
+                var vids = await _repo.GetByCategoryIdAsync(category_id);
+                return Ok(vids);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+
+        }
+        [EnableCors("MyAllowSpecificOrigins")]
+        [HttpPost("search")]
+        public async Task<IActionResult> Search(string query)
+        {
+            try
+            {
+                var vids = await _repo.SearchAsync(query);
+                return Ok(vids);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+        [EnableCors("MyAllowSpecificOrigins")]
         [HttpPost]
         public async Task<IActionResult> Create(VideoMD videoMD)
         {
@@ -60,6 +103,22 @@ namespace YoutubeAPI.Controllers
             }
             
         }
+        [EnableCors("MyAllowSpecificOrigins")]
+        [HttpPatch("view/update/{id}")]
+        public async Task<IActionResult> UpdateView(int id)
+        {
+            try
+            {
+                var views = await _repo.UpdateViewAsync(id);
+                if(views == null) return NotFound();
+                return Ok(views);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
         [EnableCors("MyAllowSpecificOrigins")]
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)

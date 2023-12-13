@@ -53,7 +53,8 @@ namespace YoutubeAPI.Controllers
             {
                 var channel = await _repo.GetByUserIdAsync(userId);
                 return Ok(channel);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -67,11 +68,26 @@ namespace YoutubeAPI.Controllers
                 var channel = await _repo.CreateAsync(channelMD);
                 return Ok(channel);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
         }
+        [EnableCors("MyAllowSpecificOrigins")]
+        [HttpPut]
+        public async Task<IActionResult> Update(ChannelVM channelVM)
+        {
+            try
+            {
+                var isUpdate = await _repo.UpdateAsync(channelVM);
+                return Ok(isUpdate);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {

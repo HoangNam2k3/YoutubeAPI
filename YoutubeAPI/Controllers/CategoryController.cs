@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using YoutubeAPI.Models;
 using YoutubeAPI.Services;
@@ -15,6 +16,7 @@ namespace YoutubeAPI.Controllers
         {
             _repo = repo;
         }
+        [EnableCors("MyAllowSpecificOrigins")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

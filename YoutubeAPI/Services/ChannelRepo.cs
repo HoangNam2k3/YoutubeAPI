@@ -89,9 +89,27 @@ namespace YoutubeAPI.Services
                 creation_date = channel.creation_date,
             };
         }
-        public Task<bool> UpdateAsync(ChannelVM channelVM)
+        public async Task<bool> UpdateAsync(ChannelVM channelVM)
         {
-            throw new NotImplementedException();
+            var existingChannel = await _dbContext.Channels.FirstOrDefaultAsync(c => c.channel_id == channelVM.channel_id);
+
+            if (existingChannel == null)
+            {
+                return false;
+            }
+
+            existingChannel.user_id = channelVM.user_id;
+            existingChannel.channel_name = channelVM.channel_name;
+            existingChannel.description = channelVM.description;
+            existingChannel.avatar = channelVM.avatar;
+            existingChannel.background = channelVM.background;
+            existingChannel.creation_date = channelVM.creation_date;
+
+            _dbContext.Channels.Update(existingChannel);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
         }
+
     }
 }

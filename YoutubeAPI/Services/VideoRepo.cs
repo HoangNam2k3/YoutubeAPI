@@ -35,6 +35,7 @@ namespace YoutubeAPI.Services
                 thumbnail= video.thumbnail,
                 upload_date = video.upload_date,
                 url = video.url,
+                views = video.views,
             };
         }
 
@@ -47,9 +48,15 @@ namespace YoutubeAPI.Services
             return true;
         }
 
-        public async Task<List<VideoVM>> GetAllAsync()
+        public async Task<List<VideoVM>> GetAllAsync(int? numberOfVideos = null)
         {
-            var videos = await _dbContext.Videos.Select(video => new VideoVM
+            IQueryable<Video> videoQuery = _dbContext.Videos;
+            if (numberOfVideos.HasValue)
+            {
+                videoQuery = videoQuery.OrderBy(x => Guid.NewGuid())
+                .Take(numberOfVideos.Value);
+            }
+            var videos = await videoQuery.Select(video => new VideoVM
             {
                 video_id = video.video_id,
                 category_id = video.category_id,
@@ -58,6 +65,7 @@ namespace YoutubeAPI.Services
                 description = video.description,
                 thumbnail = video.thumbnail,
                 upload_date = video.upload_date,
+                views = video.views,
                 url = video.url,
             }).ToListAsync();
             return videos;
@@ -76,13 +84,84 @@ namespace YoutubeAPI.Services
                 description = video.description,
                 thumbnail = video.thumbnail,
                 upload_date = video.upload_date,
+                views = video.views,
                 url = video.url,
             };
+        }
+        public async Task<List<VideoVM>> SearchAsync(string query)
+        {
+            var videos = await _dbContext.Videos
+                .Where(vid => vid.title.Contains(query))
+                .Select(video => new VideoVM
+                {
+                    video_id = video.video_id,
+                    category_id = video.category_id,
+                    channel_id = video.channel_id,
+                    title = video.title,
+                    description = video.description,
+                    thumbnail = video.thumbnail,
+                    upload_date = video.upload_date,
+                    views = video.views,
+                    url = video.url,
+                })
+                .ToListAsync();
+
+            return videos;
+        }
+
+
+        public async Task<List<VideoVM>> GetByChannelIdAsync(int channel_id)
+        {
+            var videos = await _dbContext.Videos
+                .Where(video => video.channel_id == channel_id) 
+                .Select(video => new VideoVM
+                {
+                    video_id = video.video_id,
+                    category_id = video.category_id,
+                    channel_id = video.channel_id,
+                    title = video.title,
+                    description = video.description,
+                    thumbnail = video.thumbnail,
+                    upload_date = video.upload_date,
+                views = video.views,
+                    url = video.url,
+                })
+                .ToListAsync();
+
+            return videos;
+        }
+        public async Task<List<VideoVM>> GetByCategoryIdAsync(int category_id)
+        {
+            var videos = await _dbContext.Videos
+                .Where(video => video.category_id == category_id)
+                .Select(video => new VideoVM
+                {
+                    video_id = video.video_id,
+                    category_id = video.category_id,
+                    channel_id = video.channel_id,
+                    title = video.title,
+                    description = video.description,
+                    thumbnail = video.thumbnail,
+                    upload_date = video.upload_date,
+                    views = video.views,
+                    url = video.url,
+                })
+                .ToListAsync();
+
+            return videos;
         }
 
         public Task<bool> UpdateAsync(VideoVM videoVM)
         {
             throw new NotImplementedException();
+        }
+        public async Task<int?> UpdateViewAsync(int id)
+        {
+            var video = await _dbContext.Videos.SingleOrDefaultAsync(vid => vid.video_id == id);
+            if (video == null) return null!;
+            video.views = video.views + 10;
+            await _dbContext.SaveChangesAsync();
+            return video.views;
         }
     }
 }

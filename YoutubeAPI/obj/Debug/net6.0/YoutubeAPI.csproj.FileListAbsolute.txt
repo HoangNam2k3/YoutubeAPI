@@ -552,3 +552,5 @@ F:\NamHoang\MyProject\Donet\YoutubeAPI\YoutubeAPI\obj\Debug\net6.0\refint\Youtub
 F:\NamHoang\MyProject\Donet\YoutubeAPI\YoutubeAPI\obj\Debug\net6.0\YoutubeAPI.pdb
 F:\NamHoang\MyProject\Donet\YoutubeAPI\YoutubeAPI\obj\Debug\net6.0\YoutubeAPI.genruntimeconfig.cache
 F:\NamHoang\MyProject\Donet\YoutubeAPI\YoutubeAPI\obj\Debug\net6.0\ref\YoutubeAPI.dll
+F:\NamHoang\MyProject\Donet\YoutubeAPI\YoutubeAPI\bin\Debug\net6.0\AutoMapper.dll
+F:\NamHoang\MyProject\Donet\YoutubeAPI\YoutubeAPI\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

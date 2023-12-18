@@ -1,18 +1,25 @@
-﻿using YoutubeAPI.Data;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using YoutubeAPI.Context;
+using YoutubeAPI.DTOs;
+using YoutubeAPI.Helpers;
 using YoutubeAPI.Models;
+using YoutubeAPI.Services.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace YoutubeAPI.Services
+namespace YoutubeAPI.Services.Repositories
 {
     public class CategoryRepo : IRepoCategory
     {
         private readonly MyDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public CategoryRepo(MyDbContext dbContext)
+        public CategoryRepo(MyDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
-        public async Task<CategoryVM> CreateAsync(CategoryMD categoryMD)
+        public async Task<CategoryDto> CreateAsync(CategoryMD categoryMD)
         {
             var cat = new Category
             {
@@ -20,11 +27,7 @@ namespace YoutubeAPI.Services
             };
             _dbContext.Add(cat);
             await _dbContext.SaveChangesAsync();
-            return new CategoryVM
-            {
-                category_id = cat.category_id,
-                category_name = categoryMD.category_name
-            };
+            return _mapper.Map<CategoryDto>(cat);
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -36,28 +39,21 @@ namespace YoutubeAPI.Services
             return true;
         }
 
-        public async Task<List<CategoryVM>> GetAllAsync()
+        public async Task<List<CategoryDto>> GetAllAsync()
         {
-            var categories = await _dbContext.Categories.Select(category => new CategoryVM
-            {
-                category_id = category.category_id,
-                category_name = category.category_name
-            }).ToListAsync();
+            var categories = await _dbContext.Categories.Select(category => _mapper.Map<CategoryDto>(category))
+                .ToListAsync();
             return categories;
         }
 
-        public async Task<CategoryVM> GetByIdAsync(int id)
+        public async Task<CategoryDto> GetByIdAsync(int id)
         {
             var category = await _dbContext.Categories.SingleOrDefaultAsync(cate => cate.category_id == id);
             if (category == null) return null!;
-            return new CategoryVM
-            {
-                category_id = category.category_id,
-                category_name = category.category_name
-            };
+            return _mapper.Map<CategoryDto>(category);
         }
 
-        public Task<bool> UpdateAsync(CategoryVM categoryVM)
+        public Task<bool> UpdateAsync(CategoryDto categoryVM)
         {
             throw new NotImplementedException();
         }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using YoutubeAPI.Models;
-using YoutubeAPI.Services;
+using YoutubeAPI.DTOs;
+using YoutubeAPI.Services.Interfaces;
 
 namespace YoutubeAPI.Controllers
 {

@@ -1,39 +1,37 @@
-﻿using Microsoft.CodeAnalysis.Scripting;
+﻿using AutoMapper;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-using YoutubeAPI.Data;
+using YoutubeAPI.Context;
+using YoutubeAPI.DTOs;
 using YoutubeAPI.Models;
+using YoutubeAPI.Services.Interfaces;
 
-namespace YoutubeAPI.Services
+namespace YoutubeAPI.Services.Repositories
 {
     public class UserRepo : IRepoUser
     {
         private readonly MyDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public UserRepo(MyDbContext dbContext)
+        public UserRepo(MyDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
-        public async Task<UserVM> CreateAsync(UserMD userMD)
+        public async Task<UserDto> CreateAsync(UserMD userMD)
         {
             var hashedPassword = HassPassword(userMD.password);
             var user = new User
             {
-                username = userMD.username, 
+                username = userMD.username,
                 email = userMD.email,
                 password = hashedPassword
             };
             _dbContext.Add(user);
             await _dbContext.SaveChangesAsync();
-            return new UserVM
-            {
-                user_id = user.user_id,
-                username = user.username,
-                email = user.email,
-                password = user.password,
-                join_date = user.join_date
-            };
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -45,44 +43,24 @@ namespace YoutubeAPI.Services
             return true;
         }
 
-        public async Task<List<UserVM>> GetAllAsync()
+        public async Task<List<UserDto>> GetAllAsync()
         {
-            var users = await _dbContext.Users.Select(user => new UserVM
-            {
-                user_id = user.user_id,
-                username = user.username,
-                email = user.email,
-                password = user.password,
-                join_date = user.join_date
-            }).ToListAsync();
+            var users = await _dbContext.Users.Select(user => _mapper.Map<UserDto>(user))
+                .ToListAsync();
             return users;
         }
 
-        public async Task<UserVM> GetByIdAsync(int id)
+        public async Task<UserDto> GetByIdAsync(int id)
         {
             var user = await _dbContext.Users.SingleOrDefaultAsync(us => us.user_id == id);
             if (user == null) return null!;
-            return new UserVM
-            {
-                user_id = user.user_id,
-                username = user.username,
-                email = user.email,
-                password = user.password,
-                join_date = user.join_date
-            };
+            return _mapper.Map<UserDto>(user);
         }
-        public async Task<UserVM> CheckCredentialsAsync(string email, string password)
+        public async Task<UserDto> CheckCredentialsAsync(string email, string password)
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(us => us.email == email );
+            var user = await _dbContext.Users.SingleOrDefaultAsync(us => us.email == email);
             if (user == null | !VerifyPassword(password, user!.password)) return null!;
-            return new UserVM
-            {
-                user_id = user.user_id,
-                username = user.username,
-                email = user.email,
-                password = user.password,
-                join_date = user.join_date
-            };
+            return _mapper.Map<UserDto>(user);
         }
         public async Task<bool> CheckEmailExistAsync(string email)
         {
@@ -91,7 +69,7 @@ namespace YoutubeAPI.Services
             return true;
         }
 
-        public Task<bool> UpdateAsync(UserVM userVM)
+        public Task<bool> UpdateAsync(UserDto userVM)
         {
             throw new NotImplementedException();
         }

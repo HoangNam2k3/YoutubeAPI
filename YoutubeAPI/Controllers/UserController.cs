@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using YoutubeAPI.Models;
-using YoutubeAPI.Services;
+using YoutubeAPI.DTOs;
+using YoutubeAPI.Services.Interfaces;
 
 namespace YoutubeAPI.Controllers
 {
@@ -54,7 +54,7 @@ namespace YoutubeAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.ToString()); // Convert exception to string for detailed information
+                return BadRequest(e.ToString());
             }
         }
         [EnableCors("MyAllowSpecificOrigins")]

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace YoutubeAPI.Data
+﻿namespace YoutubeAPI.Models
 {
     public class Channel
     {

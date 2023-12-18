@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using YoutubeAPI.Models;
 
-namespace YoutubeAPI.Data
+namespace YoutubeAPI.Context
 {
     public class MyDbContext : DbContext
     {

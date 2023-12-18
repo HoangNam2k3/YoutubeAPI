@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using YoutubeAPI.Data;
-using YoutubeAPI.Services;
+using YoutubeAPI.Context;
+using YoutubeAPI.Services.Interfaces;
+using YoutubeAPI.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 
 // Add services to the container.
@@ -23,8 +23,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
 
-builder.Services.AddScoped<IRepoChannel, ChannelRepo>();
 builder.Services.AddScoped<IRepoCategory, CategoryRepo>();
+builder.Services.AddScoped<IRepoChannel, ChannelRepo>();
 builder.Services.AddScoped<IRepoUser, UserRepo>();
 builder.Services.AddScoped<IRepoVideo, VideoRepo>();
 
@@ -32,6 +32,10 @@ builder.Services.AddScoped<IRepoVideo, VideoRepo>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add atutomapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 
 var app = builder.Build();
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using YoutubeAPI.Models;
-using YoutubeAPI.Services;
+using YoutubeAPI.DTOs;
+using YoutubeAPI.Services.Interfaces;
 
 namespace YoutubeAPI.Controllers
 {
@@ -18,11 +18,11 @@ namespace YoutubeAPI.Controllers
         }
         [EnableCors("MyAllowSpecificOrigins")]
         [HttpGet]
-        public async Task<IActionResult> GetAll(int? numberOfVideos = null)
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var vids = await _repo.GetAllAsync(numberOfVideos);
+                var vids = await _repo.GetAllAsync();
                 return Ok(vids);
             }
             catch (Exception ex)
@@ -136,3 +136,16 @@ namespace YoutubeAPI.Controllers
         }
     }
 }
+
+//public async Task<IActionResult> GetAll(int? numberOfVideos = null)
+//{
+//    try
+//    {
+//        var vids = await _repo.GetAllAsync(numberOfVideos);
+//        return Ok(vids);
+//    }
+//    catch (Exception ex)
+//    {
+//        return BadRequest(ex.ToString());
+//    }
+//}

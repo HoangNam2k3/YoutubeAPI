@@ -1,4 +1,4 @@
-﻿namespace YoutubeAPI.Models
+﻿namespace YoutubeAPI.DTOs
 {
     public class ChannelMD
     {
@@ -7,7 +7,7 @@
         public string description { get; set; }
         public string avatar { get; set; }
     }
-    public class ChannelVM : ChannelMD
+    public class ChannelDto : ChannelMD
     {
         public int channel_id { get; set; }
         public string background { get; set; }

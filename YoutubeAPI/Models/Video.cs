@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using YoutubeAPI.Models;
-
-namespace YoutubeAPI.Data
+﻿namespace YoutubeAPI.Models
 {
     public class Video
     {

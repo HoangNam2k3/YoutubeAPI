@@ -1,4 +1,4 @@
-﻿namespace YoutubeAPI.Models
+﻿namespace YoutubeAPI.DTOs
 {
     public class VideoMD
     {
@@ -9,7 +9,7 @@
         public string url { get; set; }
         public string thumbnail { get; set; }
     }
-    public class VideoVM : VideoMD
+    public class VideoDto : VideoMD
     {
         public int video_id { get; set; }
         public int views { get; set; }

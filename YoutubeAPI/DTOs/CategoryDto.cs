@@ -1,10 +1,10 @@
-﻿namespace YoutubeAPI.Models
+﻿namespace YoutubeAPI.DTOs
 {
     public class CategoryMD
     {
         public string category_name { get; set; }
     }
-    public class CategoryVM : CategoryMD
+    public class CategoryDto : CategoryMD
     {
         public int category_id { get; set; }
     }

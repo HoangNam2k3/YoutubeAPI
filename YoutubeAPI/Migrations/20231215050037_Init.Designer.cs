@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using YoutubeAPI.Data;
+using YoutubeAPI.Context;
 
 #nullable disable
 
 namespace YoutubeAPI.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20231125031906_Init")]
+    [Migration("20231215050037_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace YoutubeAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("YoutubeAPI.Data.Category", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Category", b =>
                 {
                     b.Property<int>("category_id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace YoutubeAPI.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.Channel", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Channel", b =>
                 {
                     b.Property<int>("channel_id")
                         .ValueGeneratedOnAdd()
@@ -78,7 +78,7 @@ namespace YoutubeAPI.Migrations
                     b.ToTable("Channels");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.User", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.User", b =>
                 {
                     b.Property<int>("user_id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +108,7 @@ namespace YoutubeAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.Video", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Video", b =>
                 {
                     b.Property<int>("video_id")
                         .ValueGeneratedOnAdd()
@@ -155,26 +155,26 @@ namespace YoutubeAPI.Migrations
                     b.ToTable("Videos");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.Channel", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Channel", b =>
                 {
-                    b.HasOne("YoutubeAPI.Data.User", "User")
+                    b.HasOne("YoutubeAPI.Models.User", "User")
                         .WithOne("Channel")
-                        .HasForeignKey("YoutubeAPI.Data.Channel", "user_id")
+                        .HasForeignKey("YoutubeAPI.Models.Channel", "user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.Video", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Video", b =>
                 {
-                    b.HasOne("YoutubeAPI.Data.Category", "Category")
+                    b.HasOne("YoutubeAPI.Models.Category", "Category")
                         .WithMany("Videos")
                         .HasForeignKey("category_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YoutubeAPI.Data.Channel", "Channel")
+                    b.HasOne("YoutubeAPI.Models.Channel", "Channel")
                         .WithMany("Videos")
                         .HasForeignKey("channel_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -185,17 +185,17 @@ namespace YoutubeAPI.Migrations
                     b.Navigation("Channel");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.Category", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Category", b =>
                 {
                     b.Navigation("Videos");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.Channel", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.Channel", b =>
                 {
                     b.Navigation("Videos");
                 });
 
-            modelBuilder.Entity("YoutubeAPI.Data.User", b =>
+            modelBuilder.Entity("YoutubeAPI.Models.User", b =>
                 {
                     b.Navigation("Channel")
                         .IsRequired();
